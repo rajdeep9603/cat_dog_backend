@@ -2,44 +2,40 @@ version: "3"
 
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name:
-      - cat_dog_app
+    image: mgabani/cat_dog_backend:latest
+    container_name: cat_dog_app
     ports:
       - "8000:8000"
+    command: bash -c "/code/entrypoint.sh"
     volumes:
       - .:/code
-      - ./db.sqlite3:/code/db.sqlite3
+      - data:/db.sqlite3
     env_file:
       - .env
     depends_on:
       - minio
+    networks:
+      backend_network:
 
   minio:
       image: minio/minio
-      container_name:
-        - minio_db
-      hostname: "minio"
+      container_name: minio_db
       volumes:
-        - ./minio:/minio_files
-      env_file:
-        - .env
+        - minio:/minio_files
+      environment:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
       command: 'minio server /minio_files --console-address ":9001"'
       ports:
         - 9000:9000
         - 9001:9001
+      networks:
+        backend_network:
 
-  minio_bucket:
-      image: minio/mc
-      container_name:
-        - minio_bucket
-      depends_on:
-        - minio
-      env_file:
-        - .env
-      entrypoint: >
-        /bin/sh -c "
-        /usr/bin/mc config host add dog-or-cat http://minio:9000 minioadmin minioadmin;
-        "
+
+volumes:
+  data:
+  minio:
+
+networks:
+  backend_network:

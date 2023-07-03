@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'corsheaders',
+    'django_minio_backend',
 
     # Internal apps
     'image_detection'
@@ -142,22 +143,17 @@ REST_FRAMEWORK = {
 }
 
 # Todo for Media storage
+DEFAULT_FILE_STORAGE = "django_minio_backend.models.MinioBackend"
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
+MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT")
+MINIO_EXTERNAL_ENDPOINT = os.getenv("MINIO_EXTERNAL_ENDPOINT")
+MINIO_EXTERNAL_ENDPOINT_USE_HTTPS = False
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
-MINIO_BUCKET_NAME = os.getenv("MINIO_BUCKET_NAME")
-MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT")
-
-AWS_ACCESS_KEY_ID = MINIO_ACCESS_KEY
-AWS_SECRET_ACCESS_KEY = MINIO_SECRET_KEY
-AWS_STORAGE_BUCKET_NAME = MINIO_BUCKET_NAME
-AWS_S3_ENDPOINT_URL = MINIO_ENDPOINT
-AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_FILE_OVERWRITE = False
-
+MINIO_USE_HTTPS = False
+MINIO_URL_EXPIRY_HOURS = timedelta(days=7)
+MINIO_PUBLIC_BUCKETS = [os.getenv("MINIO_MEDIA_FILES_BUCKET")]
+MINIO_MEDIA_FILES_BUCKET = os.getenv("MINIO_MEDIA_FILES_BUCKET")
 
 # Todo for CORS
 CORS_ALLOW_ALL_ORIGINS = True

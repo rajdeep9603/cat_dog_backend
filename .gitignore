@@ -10,7 +10,8 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media
-
+minio
+.db_data
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py

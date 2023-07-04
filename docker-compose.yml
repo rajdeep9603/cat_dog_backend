@@ -2,7 +2,7 @@ version: "3"
 
 services:
   web:
-    image: mgabani/cat_dog_backend:latest
+    image: mgabani/dog_cat_backend:latest
     container_name: cat_dog_app
     ports:
       - "8000:8000"

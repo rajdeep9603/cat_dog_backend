@@ -24,4 +24,3 @@ EXPOSE 8000
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 RUN touch db.sqlite3
-RUN chmod +x /code/entrypoint.sh

@@ -6,7 +6,10 @@ services:
     container_name: cat_dog_app
     ports:
       - "8000:8000"
-    command: bash -c "/code/entrypoint.sh"
+    command: >
+      sh -c "python manage.py makemigrations --noinput &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
       - data:/db.sqlite3
